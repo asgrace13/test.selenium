@@ -1,9 +1,10 @@
+import time
 from selenium.webdriver.firefox.webdriver import WebDriver
 
 from fixture.session import SessionHelper
 from fixture.agreement import AgreementHelper
 from fixture.registration import RegistrationHelper
-import time
+from fixture.my_contacts import MyContactsHelper
 
 
 class Application:
@@ -13,6 +14,7 @@ class Application:
         self.session = SessionHelper(self)
         self.agreement = AgreementHelper(self)
         self.registration = RegistrationHelper(self)
+        self.my_contacts = MyContactsHelper(self)
 
     def open_home_page(self):
         wd = self.wd
