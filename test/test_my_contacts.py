@@ -15,4 +15,6 @@ def test_modify_sales_phone_of_first_my_contact(app):
 
 
 def test_delete_first_my_contact(app):
+    if app.my_contacts.count() == 0:
+        app.my_contacts.create(MyContact(sales_phone="+7 (456) 546-45-65"))
     app.my_contacts.delete_first_contact()

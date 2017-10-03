@@ -9,9 +9,9 @@ class MyContactsHelper:
 
     def open_my_contact_page(self):
         wd = self.app.wd
-        time.sleep(10)
-        wd.get("http://192.168.242.167:8080/lk/#/profile/company")
         time.sleep(5)
+        wd.get("http://192.168.242.167:8080/lk/#/profile/company")
+        time.sleep(10)
 
     def create(self, MyContact):
         self.open_my_contact_page()
@@ -38,6 +38,11 @@ class MyContactsHelper:
         wd.find_element(By.ID, "submit").click()
         time.sleep(1)
         # проверка удаления
+
+    def count(self):
+        wd = self.app.wd
+        self.open_my_contact_page()
+        return len(wd.find_elements(By.CLASS_NAME, "dk-form__group"))
 
     def add_new_contact(self):
         wd = self.app.wd
