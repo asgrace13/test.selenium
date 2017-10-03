@@ -10,8 +10,9 @@ class MyContactsHelper:
     def open_my_contact_page(self):
         wd = self.app.wd
         time.sleep(5)
-        wd.get("http://192.168.242.167:8080/lk/#/profile/company")
-        time.sleep(10)
+        if not wd.current_url.endswith("lk/#/profile/company"):
+            wd.get("http://192.168.242.167:8080/lk/#/profile/company")
+            time.sleep(10)
 
     def create(self, MyContact):
         self.open_my_contact_page()

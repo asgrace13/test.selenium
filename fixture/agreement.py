@@ -10,13 +10,14 @@ class AgreementHelper:
     def open_supply_agreement_page(self):
         wd = self.app.wd
         time.sleep(5)
-        wd.get("http://192.168.242.167:8080/lk/#/contracts/supplyAgreement")
-        time.sleep(5)
+        if not wd.current_url.endswith("lk/#/contracts/supplyAgreement"):
+            wd.get("http://192.168.242.167:8080/lk/#/contracts/supplyAgreement")
+            time.sleep(5)
 
     def create(self, Agreement):
         wd = self.app.wd
         self.open_supply_agreement_page()
-        wd.find_element(By.CSS_SELECTOR, ".dk-section-title__action .md-button").click()
+        self.add_new_supply_agreement()
         # wd.find_element(By.CLASS_NAME, "dk-lpform__legal-form-select").click()
         # select Agreement.type
         wd.find_element(By.NAME, "LegalPerson").click()
@@ -61,6 +62,12 @@ class AgreementHelper:
         wd.find_element(By.ID, "submit").click()
         time.sleep(10)
         # проверка создания
+
+    def add_new_supply_agreement(self):
+        wd = self.app.wd
+        if not (wd.current_url.endswith("lk/#/contracts/supplyAgreement") and len(wd.find_elements(By.NAME, "LegalPerson")) < 1):
+            wd.find_element(By.CSS_SELECTOR, ".dk-section-title__action .md-button").click()
+            time.sleep(2)
 
     def new_supply_should_be_create(self):
         wd = self.app.wd
