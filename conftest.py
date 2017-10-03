@@ -10,18 +10,17 @@ def app(request):
     global fixture
     if fixture is None:
         fixture = Application()
-        fixture.session.login(username="tdreamkas@gmail.com", password="Qwerty12")
     else:
         if not fixture.is_valid():
             fixture = Application()
-            fixture.session.login(username="tdreamkas@gmail.com", password="Qwerty12")
+    fixture.session.ensure_login(email="tdreamkas@gmail.com", password="Qwerty12")
     return fixture
 
 
 @pytest.fixture(scope="session", autouse=True)
 def stop(request):
     def fin():
-        fixture.session.logout()
+        fixture.session.ensure_logout()
         fixture.destroy()
     request.addfinalizer(fin)
     return fixture
