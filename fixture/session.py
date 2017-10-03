@@ -14,7 +14,7 @@ class SessionHelper:
 
     def login(self, username, password):
         wd = self.app.wd
-        self.app.open_login_page()
+        self.open_login_page()
         wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='email']").click()
         wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='email']").clear()
         wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='email']").send_keys(username)
@@ -23,6 +23,10 @@ class SessionHelper:
         wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='password']").send_keys(password)
         wd.find_element(By.ID, "submit").click()
         time.sleep(7)
+        # проверка входа
 
     def logout(self):
         wd = self.app.wd
+        wd.delete_all_cookies()
+        wd.refresh()
+        time.sleep(5)

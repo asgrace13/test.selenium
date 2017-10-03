@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
-import pytest
 from model.agreement import Agreement
-from fixture.application import Application
-
-@pytest.fixture()
-def app(request):
-    fixture = Application()
-    request.addfinalizer(fixture.destroy)
-    return fixture
 
 def test_create_supply_agreement_with_ooo(app):
     app.session.login(username="tdreamkas@gmail.com", password="Qwerty12")

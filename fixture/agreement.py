@@ -60,6 +60,7 @@ class AgreementHelper:
         wd.find_element(By.NAME, "Email").send_keys(Agreement.email)
         wd.find_element(By.ID, "submit").click()
         time.sleep(10)
+        # проверка создания
 
     def new_supply_should_be_create(self):
         wd = self.app.wd
