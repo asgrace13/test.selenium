@@ -8,6 +8,8 @@ class MyContactsHelper:
     def __init__(self, app):
         self.app = app
 
+    my_contacts_cache = None
+
     def open_my_contact_page(self):
         time.sleep(5)
         wd = self.app.wd
@@ -21,6 +23,7 @@ class MyContactsHelper:
         self.fill_contact_form(MyContact)
         self.save_contacts()
         time.sleep(5)
+        self.my_contacts_cache = None
         # проверка создания
 
     def modify_first_contact(self, MyContact):
@@ -28,6 +31,7 @@ class MyContactsHelper:
         self.fill_contact_form(MyContact)
         self.save_contacts()
         time.sleep(5)
+        self.my_contacts_cache = None
         # проверка создания
 
     def save_contacts(self):
@@ -39,7 +43,7 @@ class MyContactsHelper:
         self.open_my_contact_page()
         wd.find_element(By.CLASS_NAME, "dk-section-new-order__item-remove").click()
         time.sleep(1)
-
+        self.my_contacts_cache = None
         # проверка удаления
 
     def count(self):
@@ -66,15 +70,16 @@ class MyContactsHelper:
             wd.find_element(*locator).send_keys(text)
 
     def get_my_contacts_list(self):
-        wd = self.app.wd
-        self.open_my_contact_page()
-        my_contacts = []
-        for index, element in enumerate(wd.find_elements(By.CLASS_NAME, "dk-form__group")):
-            address = self.get_value_of_element(element, (By.CLASS_NAME, "address-input input"))
-            sale_phone = self.get_value_of_element(element, (By.CLASS_NAME, "sales-phone-input"))
-            asc_phone = self.get_value_of_element(element, (By.CLASS_NAME, "repair-phone-input"))
-            my_contacts.append(MyContact(address, sale_phone, asc_phone, index))
-        return my_contacts
+        if self.my_contacts_cache is None:
+            wd = self.app.wd
+            self.open_my_contact_page()
+            self.my_contacts_cache = []
+            for index, element in enumerate(wd.find_elements(By.CLASS_NAME, "dk-form__group")):
+                address = self.get_value_of_element(element, (By.CLASS_NAME, "address-input input"))
+                sale_phone = self.get_value_of_element(element, (By.CLASS_NAME, "sales-phone-input"))
+                asc_phone = self.get_value_of_element(element, (By.CLASS_NAME, "repair-phone-input"))
+                self.my_contacts_cache.append(MyContact(address, sale_phone, asc_phone, index))
+        return list(self.my_contacts_cache)
 
     def get_value_of_element(self, element, locator):
         wd = self.app.wd
