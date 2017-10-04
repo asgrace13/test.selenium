@@ -37,8 +37,9 @@ class MyContactsHelper:
     def delete_first_contact(self):
         wd = self.app.wd
         self.open_my_contact_page()
-        wd.find_element(By.ID, "submit").click()
+        wd.find_element(By.CLASS_NAME, "dk-section-new-order__item-remove").click()
         time.sleep(1)
+
         # проверка удаления
 
     def count(self):
