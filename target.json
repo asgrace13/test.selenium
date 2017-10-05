@@ -1,0 +1,7 @@
+{
+  "baseUrl": "http://192.168.242.167:8080",
+  "os": {"type": "windows", "version": "7"},
+  "browser": {"type": "firefox", "version": "28"},
+  "userEmail":"tdreamkas@gmail.com",
+  "userPassword": "Qwerty12"
+}
