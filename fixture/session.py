@@ -8,10 +8,11 @@ class SessionHelper:
     def __init__(self, app):
         self.app = app
         self.sessions = {}
+        self.base_url = app.base_url
 
     def open_login_page(self):
         wd = self.app.wd
-        wd.get("http://192.168.242.167:8080/lk/#/login/")
+        wd.get(self.base_url + "/lk/#/login/")
         time.sleep(5)
 
     def login(self, email, password):
