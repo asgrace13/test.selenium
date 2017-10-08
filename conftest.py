@@ -20,7 +20,6 @@ def app(request):
             target = json.load(f)
     if fixture is None or not fixture.is_valid():
             fixture = Application(browser=target["browser"]["type"], base_url=target["base_url"])
-    fixture.session.ensure_login(email=target["userEmail"], password=target["userPassword"])
     return fixture
 
 
