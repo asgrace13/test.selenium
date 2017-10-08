@@ -10,23 +10,28 @@ class SessionHelper:
         self.sessions = {}
         self.base_url = app.base_url
 
+        server_message = (By.CSS_SELECTOR, "[ng-message='server']")
+        registration_button = (By.CSS_SELECTOR, "[ui-sref='registration']")
+        lostPassword_button = (By.CSS_SELECTOR, "[ui-sref='lostPassword']")
+
     def open_login_page(self):
         wd = self.app.wd
         wd.get(self.base_url + "/lk/#/login/")
-        time.sleep(5)
+        self.app.wait_for_page_load()
 
     def login(self, email, password):
-        wd = self.app.wd
         self.open_login_page()
-        wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='email']").click()
-        wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='email']").clear()
-        wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='email']").send_keys(email)
-        wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='password']").click()
-        wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='password']").clear()
-        wd.find_element(By.CSS_SELECTOR, "md-input-container input[name='password']").send_keys(password)
-        wd.find_element(By.ID, "submit").click()
-        time.sleep(7)
+        self.fill_login_form(email, password)
         # проверка входа
+        expect_urls = map(lambda x: self.base_url + x, ['/partnerProgram', '/contracts/supplyAgreement', '/orders'])
+        self.app.should_be_open_page(*expect_urls)
+
+    def fill_login_form(self, email, password):
+        email_locator = (By.CSS_SELECTOR, "md-input-container input[name='email']")
+        self.app.change_field_value(locator=email_locator, text=email)
+        password_locator = (By.CSS_SELECTOR, "md-input-container input[name='password']")
+        self.app.change_field_value(locator=password_locator, text=password)
+        self.app.element_is_clickable(By.ID, "submit").click()
 
     def ensure_login(self, email, password):
         if self.is_logged_in():
@@ -37,16 +42,12 @@ class SessionHelper:
         self.login_as(email, password)
 
     def login_as(self, email, password):
-        self.login(email, password)
-        # if not self.ensure_set_session_cookie(email):
-        #     self.login(email, password)
-        #     self.get_session_cookie(email)
+        if not self.ensure_set_session_cookie(email):
+            self.login(email, password)
+            self.get_session_cookie(email)
 
     def logout(self):
-        wd = self.app.wd
-        wd.delete_all_cookies()
-        wd.refresh()
-        time.sleep(5)
+        self.delete_all_cookies()
 
     def ensure_logout(self):
         if self.is_logged_in():
@@ -69,10 +70,14 @@ class SessionHelper:
         wd = self.app.wd
         wd.delete_cookie('app')
         wd.add_cookie(self.sessions[email])
-        wd.refresh()
+        self.app.refresh_page()
         return True
 
     def get_session_cookie(self, email):
         wd = self.app.wd
         if email not in self.sessions.keys():
             self.sessions[email] = wd.get_cookie('app')
+
+    def delete_all_cookies(self):
+        self.app.wd.delete_all_cookies()
+        self.app.refresh_page()
